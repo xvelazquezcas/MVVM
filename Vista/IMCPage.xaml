@@ -3,19 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MVVM.Vista.IMCPage"
              Title="IMCPage">
-    <VerticalStackLayout Padding="20" Spacing="15">
-        <Label Text="Calculadora IMC" FontSize="24" HorizontalOptions="Center"/>
 
-        <Entry Placeholder="Peso(kg)" Keyboard="Numeric" Text="{Binding Peso}"/>
-        <Entry Placeholder="Altura(m)" Keyboard="Numeric" Text="{Binding Altura}"/>
+    <StackLayout Padding="20" Spacing="15">
+        <Label Text="Calculadora de IMC" FontSize="24" HorizontalOptions="Center" />
 
-        <Button Text="Calcular IMC" Command="{Binding CalcularCommand}"/>
+        <Entry Placeholder="Peso (kg)" Text="{Binding Peso}" Keyboard="Numeric"/>
+        <Entry Placeholder="Altura (m)" Text="{Binding Altura}" Keyboard="Numeric"/>
 
-        <Label Text="IMC" FontSize="18"/>
-        <Label Text="{Binding IMC,StringFormat='{}{0:F2}'}" FontSize="18" FontAttributes="Bold"/>
+        <Button Text="Calcular IMC" Command="{Binding CalcularIMCCommand}" />
 
-        <Label Text="Clasificacion" FontSize="18"/>
-        <Label Text="{Binding Resultado}" FontSize="18" FontAttributes="Bold"/>
-
-    </VerticalStackLayout>
+        <Label Text="{Binding IMC}" FontSize="24" TextColor="Blue" HorizontalOptions="Center"/>
+        <Label Text="{Binding Resultado}" FontSize="18" TextColor="Red" HorizontalOptions="Center"/>
+    </StackLayout>
 </ContentPage>

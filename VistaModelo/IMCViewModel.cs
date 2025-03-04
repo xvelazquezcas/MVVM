@@ -1,92 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace MVVM.VistaModelo
+namespace CalcularIMC_MAUI
 {
-    public class IMCViewModel : INotifyPropertyChanged
+    public class IMCViewModel : INotifyPropertyChanged  
     {
-        private double peso;
-        private double altura;
-        private double imc;
-        private string resultado;
+        private string _peso;
+        private string _altura;
+        private string _imc;
+        private string _resultado;
 
-        public double Peso
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string Peso
         {
-            get => peso;
+            get => _peso;
             set
             {
-                peso = value;
-                OnPropertyChanged(nameof(Peso));
+                _peso = value;
+                OnPropertyChanged();
             }
         }
 
-        public double Altura
+        public string Altura
         {
-            get => altura;
+            get => _altura;
             set
             {
-                altura = value;
-                OnPropertyChanged(nameof(Altura));
+                _altura = value;
+                OnPropertyChanged();
             }
         }
 
-        public double IMC
+        public string IMC
         {
-            get => imc;
+            get => _imc;
             set
             {
-                imc = value;
-                OnPropertyChanged(nameof(IMC));
+                _imc = value;
+                OnPropertyChanged();
             }
         }
 
         public string Resultado
         {
-            get => resultado;
+            get => _resultado;
             set
             {
-                resultado = value;
-                OnPropertyChanged(nameof(Resultado));
+                _resultado = value;
+                OnPropertyChanged();
             }
         }
 
-        public ICommand CalcularCommand { get; }
+        public ICommand CalcularIMCCommand { get; }
 
         public IMCViewModel()
         {
-            CalcularCommand = new Command(CalcularIMC);
+            CalcularIMCCommand = new Command(CalcularIMC);
         }
 
         private void CalcularIMC()
         {
-            if (Altura > 0)
+            if (double.TryParse(Peso, out double peso) && double.TryParse(Altura, out double altura) && altura > 0)
             {
-                IMC = Peso / (Altura * Altura);
-                Resultado = ObtenerClasificacion(IMC);
+                double imc = peso / (altura * altura);
+                IMC = $"IMC: {imc:F2}";  // Formatear el IMC a dos decimales.
+
+                if (imc < 18.5)
+                    Resultado = "Te hace falta comer";
+                else if (imc <= 24.9)
+                    Resultado = "Tu peso es normal";
+                else if (imc <= 29.9)
+                    Resultado = "Estás pasadito";
+                else
+                    Resultado = "Tienes obesidad, cuídate";
             }
             else
             {
-                Resultado = "Ingrese valores válidos";
+                Resultado = "Datos inválidos, ingresa valores numéricos";
             }
         }
 
-        private string ObtenerClasificacion(double imc)
-        {
-            if (imc < 18.5) return "Bajo peso";
-            if (imc < 24.9) return "Peso normal";
-            if (imc < 29.9) return "Sobrepeso";
-            return "Obesidad";
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
+
